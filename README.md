@@ -30,3 +30,12 @@ It provides authentication functionality using **JWT** and secure password handl
 ---
 
 ## 📂 Project Structure
+
+server/
+│── controllers/
+│── models/
+│── routes/
+│── config/
+│── server.js
+│── package.json
+│── .env
