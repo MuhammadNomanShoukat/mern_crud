@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate()
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -13,9 +16,45 @@ const Login = () => {
       [name]: value,
     });
   };
-  const handleSubmit = (e) => {
+
+  const resetForm = () => {
+    setUser({
+      email: "",
+      password: ""
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(user);
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify(user);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/login",
+        requestOptions,
+      );
+      if (response.status === 200 && response.ok) {
+          resetForm();
+          navigate("/")          
+      }else{
+        alert("wronge credentials!")
+        exit();
+      }
+      console.log(response)
+    } catch (err) {
+      console.err(err);
+    }
   };
   return (
     <>
@@ -32,7 +71,7 @@ const Login = () => {
                 />
               </div>
               <div className="regsiteration-form">
-                <h1 className="main-heading mb-3">Registeration Form</h1>
+                <h1 className="main-heading mb-3">Login Form</h1>
                 <form onSubmit={handleSubmit}>
                   <label htmlFor="username">email</label>
                   <input

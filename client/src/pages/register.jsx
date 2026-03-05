@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"
 
 const Register = () => {
   const [user, setUser] = useState({
@@ -8,6 +9,17 @@ const Register = () => {
     phone: "",
   });
 
+  const navigate = useNavigate()
+
+  const resetForm = () => {
+    setUser({
+      username: "",
+      email: "",
+      password: "",
+      phone: "",
+    });
+  };
+
   const handleInput = (e) => {
     const { name, value } = e.target;
     setUser({
@@ -15,9 +27,37 @@ const Register = () => {
       [name]: value,
     });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(user);
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify(user);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/register",
+        requestOptions,
+      );
+      if (response.status === 200 && response.ok) {
+          resetForm();
+          navigate("/login")          
+      }else{
+        alert("User not register yet!")
+        exit();
+      }
+      console.log(response)
+    } catch (err) {
+      console.err(err);
+    }
   };
   return (
     <>

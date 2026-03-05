@@ -5,5 +5,11 @@
 }
 
 html {
-  font-size: 62.5%;
+  /* font-size: 62.5%; */
+}
+
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }

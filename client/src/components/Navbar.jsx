@@ -4,7 +4,7 @@ import "./Navbar.css"
 const NavBar = () => {
   return (
     <header>
-      <div className="container">
+      <div className="container navbar">
         <div className="logo-brand">
           <NavLink to="">Demo Site</NavLink>
         </div>
