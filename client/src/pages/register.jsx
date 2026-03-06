@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../store/auth";
 
 const Register = () => {
   const [user, setUser] = useState({
@@ -9,7 +10,8 @@ const Register = () => {
     phone: "",
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const storeTokenInLs = useAuth();
 
   const resetForm = () => {
     setUser({
@@ -48,13 +50,16 @@ const Register = () => {
         requestOptions,
       );
       if (response.status === 200 && response.ok) {
-          resetForm();
-          navigate("/login")          
-      }else{
-        alert("User not register yet!")
+        const data = await response.json();
+        console.log("Resonse: ", await response.json());
+        storeTokenInLs(data);
+        resetForm();
+        navigate("/login");
+      } else {
+        alert("User not register yet!");
         exit();
       }
-      console.log(response)
+      console.log(response);
     } catch (err) {
       console.err(err);
     }
