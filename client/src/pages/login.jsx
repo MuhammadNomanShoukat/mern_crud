@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../store/auth";
+import { toast } from 'react-toastify';
+import Footer from "../components/Footer/Footer";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -7,7 +10,8 @@ const Login = () => {
     password: "",
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { storeTokenInLs } = useAuth();
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -20,13 +24,12 @@ const Login = () => {
   const resetForm = () => {
     setUser({
       email: "",
-      password: ""
+      password: "",
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -44,65 +47,75 @@ const Login = () => {
         "http://localhost:5000/api/auth/login",
         requestOptions,
       );
+      const data = await response.json();
       if (response.status === 200 && response.ok) {
-          resetForm();
-          navigate("/")          
-      }else{
-        alert("wronge credentials!")
-        exit();
+        storeTokenInLs(data.token);
+        resetForm();
+        toast.success("Login successful!");
+        navigate("/");
+      } else {
+        toast.error(data.extraDetails || data.message || "Invalid credentials!");
       }
-      console.log(response)
     } catch (err) {
-      console.err(err);
+      console.error(err);
+      toast.error("Network error! Please try again.");
     }
   };
   return (
     <>
-      <section>
+      <section className="section-login">
         <main>
           <div className="section-registeration">
             <div className="container grid grid-two-cols">
               <div className="registeration-image">
                 <img
-                  src="/images/register.png"
+                  src="/images/login.svg"
                   alt="login image"
                   width="500"
                   height="500"
                 />
               </div>
               <div className="regsiteration-form">
-                <h1 className="main-heading mb-3">Login Form</h1>
-                <form onSubmit={handleSubmit}>
-                  <label htmlFor="username">email</label>
-                  <input
-                    type="text"
-                    name="email"
-                    placeholder="enter email address"
-                    id="email"
-                    required
-                    autoComplete="off"
-                    value={user.email}
-                    onChange={handleInput}
-                  />
-                  <label htmlFor="password">password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="enter password"
-                    id="password"
-                    required
-                    autoComplete="off"
-                    value={user.password}
-                    onChange={handleInput}
-                  />
-                  <br />
-                  <button type="submit">Submit</button>
+                <div className="form-header">
+                  <h1 className="main-heading mb-3">Welcome Back</h1>
+                  <p className="form-subtitle">Sign in to your account to continue</p>
+                </div>
+                <form onSubmit={handleSubmit} className="auth-form">
+                  <div className="form-group">
+                    <label htmlFor="email">Email Address</label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="your.email@example.com"
+                      id="email"
+                      required
+                      autoComplete="off"
+                      value={user.email}
+                      onChange={handleInput}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="password">Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Enter your password"
+                      id="password"
+                      required
+                      autoComplete="off"
+                      value={user.password}
+                      onChange={handleInput}
+                    />
+                  </div>
+                  <button type="submit" className="btn-submit">Sign In</button>
+                  <p className="form-footer">Don't have an account? <a href="/register">Register here</a></p>
                 </form>
               </div>
             </div>
           </div>
         </main>
       </section>
+      <Footer />
     </>
   );
 };

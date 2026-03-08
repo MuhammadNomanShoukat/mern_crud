@@ -1,0 +1,27 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Cylinder 1 -->
+  <ellipse cx="100" cy="70" rx="35" ry="15" fill="none" stroke="url(#grad6)" stroke-width="2"/>
+  <line x1="65" y1="70" x2="65" y2="180" stroke="url(#grad6)" stroke-width="2"/>
+  <line x1="135" y1="70" x2="135" y2="180" stroke="url(#grad6)" stroke-width="2"/>
+  <ellipse cx="100" cy="180" rx="35" ry="15" fill="none" stroke="url(#grad6)" stroke-width="2"/>
+  <!-- Cylinder 2 -->
+  <ellipse cx="250" cy="70" rx="35" ry="15" fill="none" stroke="url(#grad6)" stroke-width="2"/>
+  <line x1="215" y1="70" x2="215" y2="180" stroke="url(#grad6)" stroke-width="2"/>
+  <line x1="285" y1="70" x2="285" y2="180" stroke="url(#grad6)" stroke-width="2"/>
+  <ellipse cx="250" cy="180" rx="35" ry="15" fill="none" stroke="url(#grad6)" stroke-width="2"/>
+  <!-- Connection arrows -->
+  <path d="M 140 120 Q 190 80 210 120" fill="none" stroke="url(#grad6)" stroke-width="2"/>
+  <polygon points="210,120 215,110 205,115" fill="url(#grad6)"/>
+  <!-- Data indicators -->
+  <circle cx="100" cy="110" r="5" fill="url(#grad6)"/>
+  <circle cx="250" cy="110" r="5" fill="url(#grad6)"/>
+  <!-- Bottom indicator -->
+  <rect x="80" y="220" width="240" height="20" rx="10" fill="none" stroke="url(#grad6)" stroke-width="2"/>
+  <rect x="85" y="225" width="60" height="10" rx="5" fill="url(#grad6)" opacity="0.6"/>
+</svg>

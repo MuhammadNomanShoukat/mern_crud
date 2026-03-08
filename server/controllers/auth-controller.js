@@ -16,7 +16,11 @@ const register = async (req, res) => {
     if (emailExist) {
       return res
         .status(400)
-        .json({ msg: "Email already exists.", status: false });
+        .json({
+          message: "Email already exists.",
+          status: 400,
+          extraDetails: "Email already exists.",
+        });
     }
 
     const userCreated = await userModel.create({
@@ -34,7 +38,7 @@ const register = async (req, res) => {
       status: true,
     });
   } catch (err) {
-    return res.status(500).send({ msg: "server error" });
+    return res.status(500).json({ msg: "server error" });
   }
 };
 
@@ -44,7 +48,7 @@ const login = async (req, res) => {
 
     const userExist = await userModel.findOne({ email });
     if (!userExist) {
-      return res.status(400).json({ msg: "user not exists.", status: false });
+      return res.status(400).json({ message: "user not exists.", status: 400, extraDetails: "user not exists." });
     }
 
     const userPass = await userExist.comparePassword(password);
@@ -57,11 +61,25 @@ const login = async (req, res) => {
         status: true,
       });
     } else {
-      return res.status(401).json({ msg: "Invailid credentiols" });
+      return res.status(401).json({ message: "Invailid credentiols" });
     }
   } catch (err) {
-    return res.status(500).send({ msg: "server error" });
+    return res.status(500).json({ message: "server error" });
   }
 };
 
-module.exports = { home, register, login };
+const user = async (req, res) => {
+  try {
+    const { userId, email, isAdmin } = req;
+
+    const user = await userModel
+      .findOne({ email: email })
+      .select({ password: 0 });
+
+    return res.status(200).json({ message: "User found", user });
+  } catch (error) {
+    return res.status(500).json({ message: "server error in user controller" });
+  }
+};
+
+module.exports = { home, register, login, user };

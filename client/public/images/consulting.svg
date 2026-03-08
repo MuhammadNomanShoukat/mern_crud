@@ -1,0 +1,22 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Person head -->
+  <circle cx="200" cy="60" r="35" fill="none" stroke="url(#grad4)" stroke-width="2"/>
+  <!-- Person body -->
+  <line x1="200" y1="95" x2="200" y2="160" stroke="url(#grad4)" stroke-width="2"/>
+  <!-- Arms -->
+  <line x1="140" y1="125" x2="260" y2="125" stroke="url(#grad4)" stroke-width="2"/>
+  <!-- Chat bubble 1 -->
+  <rect x="100" y="180" width="120" height="50" rx="10" fill="none" stroke="url(#grad4)" stroke-width="2"/>
+  <polygon points="105,230 95,240 115,235" fill="url(#grad4)"/>
+  <!-- Chat bubble 2 -->
+  <rect x="220" y="180" width="120" height="50" rx="10" fill="url(#grad4)" opacity="0.3"/>
+  <!-- Message lines -->
+  <line x1="115" y1="195" x2="185" y2="195" stroke="url(#grad4)" stroke-width="1.5"/>
+  <line x1="115" y1="210" x2="185" y2="210" stroke="url(#grad4)" stroke-width="1.5"/>
+</svg>

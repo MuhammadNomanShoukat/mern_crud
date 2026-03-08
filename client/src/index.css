@@ -4,12 +4,34 @@
   box-sizing: border-box;
 }
 
+:root {
+  --primary-color: #3b82f6;
+  --secondary-color: #06b6d4;
+  --dark-bg: #0f172a;
+  --light-bg: #f8fafc;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+  --border-color: #e2e8f0;
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
 html {
-  /* font-size: 62.5%; */
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  color: var(--text-dark);
+  line-height: 1.6;
 }
 
 .navbar {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
