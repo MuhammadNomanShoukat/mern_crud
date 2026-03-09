@@ -1,48 +1,41 @@
 import { useState, useEffect } from "react";
 import { FaEnvelope, FaTrash, FaEye, FaReply } from "react-icons/fa";
 import "./Admin-Contacts.css";
+import { useAuth } from "../store/auth";
 
 const AdminContacts = () => {
-  const [contacts, setContacts] = useState([
-    {
-      id: 1,
-      username: "john_doe",
-      email: "john@example.com",
-      message: "I have a question about your services. Can you provide more information?",
-      status: "pending",
-      date: "2025-03-05",
-    },
-    {
-      id: 2,
-      username: "jane_smith",
-      email: "jane@example.com",
-      message: "Great product! I would like to know the pricing plans available.",
-      status: "replied",
-      date: "2025-03-04",
-    },
-    {
-      id: 3,
-      username: "bob_wilson",
-      email: "bob@example.com",
-      message: "Technical issue with the application. Need urgent support.",
-      status: "pending",
-      date: "2025-03-03",
-    },
-    {
-      id: 4,
-      username: "alice_johnson",
-      email: "alice@example.com",
-      message: "Request for custom development services for our company.",
-      status: "replied",
-      date: "2025-03-02",
-    },
-  ]);
+  const [contacts, setContacts] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [filteredContacts, setFilteredContacts] = useState(contacts);
   const [selectedContact, setSelectedContact] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  const { token } = useAuth();
+
+  const getContacts = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", token);
+
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+    };
+
+    const response = await fetch(
+      "http://localhost:5000/api/admin/contacts",
+      requestOptions,
+    );
+
+    const contacts = await response.json();
+
+    setContacts(contacts);
+  };
+
+  useEffect(()=>{
+    getContacts()
+  }, [])
 
   useEffect(() => {
     let filtered = contacts;
@@ -52,7 +45,7 @@ const AdminContacts = () => {
       filtered = filtered.filter(
         (contact) =>
           contact.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          contact.email.toLowerCase().includes(searchTerm.toLowerCase())
+          contact.email.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -66,7 +59,7 @@ const AdminContacts = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this contact?")) {
-      setContacts(contacts.filter((contact) => contact.id !== id));
+      setContacts(contacts.filter((contact) => contact._id !== id));
     }
   };
 
@@ -86,8 +79,8 @@ const AdminContacts = () => {
         contacts.map((contact) =>
           contact.id === selectedContact.id
             ? { ...contact, status: "replied" }
-            : contact
-        )
+            : contact,
+        ),
       );
       closeModal();
     }
@@ -111,7 +104,10 @@ const AdminContacts = () => {
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#feebc8", color: "#7c2d12" }}>
+          <div
+            className="stat-icon"
+            style={{ background: "#feebc8", color: "#7c2d12" }}
+          >
             <FaEnvelope />
           </div>
           <div className="stat-content">
@@ -120,7 +116,10 @@ const AdminContacts = () => {
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#c6f6d5", color: "#22543d" }}>
+          <div
+            className="stat-icon"
+            style={{ background: "#c6f6d5", color: "#22543d" }}
+          >
             <FaEnvelope />
           </div>
           <div className="stat-content">
@@ -159,7 +158,7 @@ const AdminContacts = () => {
             <table className="contacts-table">
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>Username</th>
                   <th>Email</th>
                   <th>Message</th>
                   <th>Status</th>
@@ -231,7 +230,10 @@ const AdminContacts = () => {
       </div>
 
       {/* Message Modal */}
-      <div className={`contact-modal ${showModal ? "active" : ""}`} onClick={closeModal}>
+      <div
+        className={`contact-modal ${showModal ? "active" : ""}`}
+        onClick={closeModal}
+      >
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <button className="modal-close" onClick={closeModal}>
             ✕
@@ -263,7 +265,9 @@ const AdminContacts = () => {
                         : "pending-badge"
                     }
                   >
-                    {selectedContact.status === "replied" ? "Replied" : "Pending"}
+                    {selectedContact.status === "replied"
+                      ? "Replied"
+                      : "Pending"}
                   </span>
                 </p>
               </div>

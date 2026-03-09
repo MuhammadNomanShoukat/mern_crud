@@ -93,7 +93,7 @@
   /* margin-left: 260px; */
   flex: 1;
   width: calc(100vw - 260px);
-  padding: 20px 25px;
+  /* padding: 20px 25px; */
   overflow-y: auto;
   background: #f0f4f8;
   display: flex;

@@ -12,6 +12,8 @@ import Logout from "./pages/Logout";
 import AdminLayout from "./layouts/Admin-Layout";
 import AdminUsers from "./pages/Admin-Users";
 import AdminContacts from "./pages/Admin-Contacts";
+import AdminUpdateUser from "./pages/Admin-Update-User"
+import AdminUpdateContact from "./pages/Admin-Update-Contact";
 import "./App.css";
 
 const App = () => {
@@ -30,6 +32,8 @@ const App = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="users" element={<AdminUsers />} />
           <Route path="contacts" element={<AdminContacts />} />
+          <Route path="user/:id" element={<AdminUpdateUser />} />
+          <Route path="contact/:id" element={<AdminUpdateContact />} />
         </Route>
       </Routes>
     </BrowserRouter>

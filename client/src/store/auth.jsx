@@ -86,7 +86,8 @@ export const ContextProvider = ({ children }) => {
         logout,
         getAuthorizedUser,
         loggedInUser,
-        services
+        services,
+        token
       }}
     >
       {children}

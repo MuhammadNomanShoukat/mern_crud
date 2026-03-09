@@ -58,6 +58,7 @@ const login = async (req, res) => {
         msg: "Record found",
         token: await userExist.generateJwtToken(),
         userId: userExist._id.toString(),
+        isAdmin: userExist.isAdmin,
         status: true,
       });
     } else {

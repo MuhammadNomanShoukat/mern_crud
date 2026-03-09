@@ -1,52 +1,60 @@
 import { useState, useEffect } from "react";
 import { FaUsers, FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 import "./Admin-Users.css";
+import { useAuth } from "../store/auth";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const AdminUsers = () => {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      username: "john_doe",
-      email: "john@example.com",
-      phone: "+1 234-567-8900",
-      status: "active",
-      joinDate: "2025-01-15",
-    },
-    {
-      id: 2,
-      username: "jane_smith",
-      email: "jane@example.com",
-      phone: "+1 987-654-3210",
-      status: "active",
-      joinDate: "2025-02-20",
-    },
-    {
-      id: 3,
-      username: "bob_wilson",
-      email: "bob@example.com",
-      phone: "+1 456-789-0123",
-      status: "inactive",
-      joinDate: "2025-01-10",
-    },
-  ]);
+  const [users, setUsers] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(users);
+  
+  const navigate = useNavigate()
+  const { token } = useAuth();
+
+  const getUsers = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", token);
+
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+    };
+
+    const response = await fetch(
+      "http://localhost:5000/api/admin/users",
+      requestOptions,
+    );
+
+    const users = await response.json();
+
+    setUsers(users);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   useEffect(() => {
     const filtered = users.filter(
       (user) =>
         user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.phone.includes(searchTerm)
+        user.phone.includes(searchTerm),
     );
+
     setFilteredUsers(filtered);
   }, [searchTerm, users]);
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
-      setUsers(users.filter((user) => user.id !== id));
+      setUsers(users.filter((user) => user._id !== id));
     }
+  };
+
+  const handleEdit = (user) => {
+    navigate(`/admin/user/${user._id}`);
   };
 
   return (
@@ -67,12 +75,15 @@ const AdminUsers = () => {
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#c6f6d5", color: "#22543d" }}>
+          <div
+            className="stat-icon"
+            style={{ background: "#c6f6d5", color: "#22543d" }}
+          >
             <FaUsers />
           </div>
           <div className="stat-content">
-            <h3>Active Users</h3>
-            <p>{users.filter((u) => u.status === "active").length}</p>
+            <h3>Admin Users</h3>
+            <p>{users.filter((u) => u.isAdmin).length}</p>
           </div>
         </div>
       </div>
@@ -106,7 +117,7 @@ const AdminUsers = () => {
               </thead>
               <tbody>
                 {filteredUsers.map((user) => (
-                  <tr key={user.id}>
+                  <tr key={user._id}>
                     <td>
                       <strong>{user.username}</strong>
                     </td>
@@ -115,23 +126,28 @@ const AdminUsers = () => {
                     <td>
                       <span
                         className={`status-badge ${
-                          user.status === "active"
-                            ? "status-active"
-                            : "status-inactive"
+                          user.isAdmin ? "status-active" : "status-inactive"
                         }`}
                       >
-                        {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                        Admin
                       </span>
                     </td>
                     <td>{new Date(user.joinDate).toLocaleDateString()}</td>
                     <td>
                       <div className="action-buttons">
-                        <button className="btn-edit" title="Edit user">
+                        <button
+                          className="btn-edit"
+                          title="Edit user"
+                          onClick={()=>handleEdit(user)}
+                        >
                           <FaEdit /> Edit
                         </button>
+                        {/* <Link to={`/admin/user/${user._id}`} className="btn-edit" title="Edit user">
+                        Edit link
+                        </Link> */}
                         <button
                           className="btn-delete"
-                          onClick={() => handleDelete(user.id)}
+                          onClick={() => handleDelete(user._id)}
                           title="Delete user"
                         >
                           <FaTrash /> Delete
