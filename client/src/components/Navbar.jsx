@@ -5,14 +5,15 @@ import "./Navbar.css";
 
 const NavBar = () => {
   const [loggedInUser, setLoggedInUser] = useState(true);
-  const { loggedIn, getAuthorizedUser } = useAuth();
+  const { loggedIn, getAuthorizedUser, isAdmin } = useAuth();
 
   useEffect(() => {
     if (loggedInUser) {
       getAuthorizedUser();
       setLoggedInUser(false);
     }
-  }, [getAuthorizedUser]);
+  }, [getAuthorizedUser, isAdmin]);
+  // console.log(isAdmin)
 
   return (
     <header>
@@ -22,9 +23,16 @@ const NavBar = () => {
         </div>
         <nav>
           <ul>
-            <li>
-              <NavLink to="/">Home</NavLink>
-            </li>
+            {isAdmin ? (
+              <li>
+                <NavLink to="/admin">Dashboard</NavLink>
+              </li>
+            ) : (
+              <li>
+                <NavLink to="/">Home</NavLink>
+              </li>
+            )}
+
             <li>
               <NavLink to="/about">About</NavLink>
             </li>

@@ -7,6 +7,7 @@ export const ContextProvider = ({ children }) => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   const apiUri = import.meta.env.VITE_APP_URI_API
 
@@ -74,6 +75,7 @@ export const ContextProvider = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         setLoggedInUser(data.user);
+        setIsAdmin(data.user.isAdmin)
         setIsLoading(false)
       }else{
         setIsLoading(false)
@@ -95,7 +97,8 @@ export const ContextProvider = ({ children }) => {
         loggedInUser,
         services,
         token,
-        isLoading
+        isLoading,
+        isAdmin 
       }}
     >
       {children}
