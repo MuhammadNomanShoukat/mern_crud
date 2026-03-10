@@ -6,6 +6,9 @@ export const ContextProvider = ({ children }) => {
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [services, setServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
+
+  const apiUri = import.meta.env.VITE_APP_URI_API
 
   const storeTokenInLs = (token) => {
     setToken(token);
@@ -36,7 +39,7 @@ export const ContextProvider = ({ children }) => {
       };
 
       const response = await fetch(
-        "http://localhost:5000/api/data/services",
+        `${apiUri}/api/data/services`,
         requestOptions,
       );
 
@@ -53,6 +56,7 @@ export const ContextProvider = ({ children }) => {
 
   const getAuthorizedUser = async () => {
     try {
+      setIsLoading(true)
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `${token}`);
       myHeaders.append("Content-Type", "application/json");
@@ -63,13 +67,16 @@ export const ContextProvider = ({ children }) => {
       };
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/user",
+        `${apiUri}/api/auth/user`,
         requestOptions,
       );
 
       if (response.ok) {
         const data = await response.json();
         setLoggedInUser(data.user);
+        setIsLoading(false)
+      }else{
+        setIsLoading(false)
       }
     } catch (error) {
       console.error(error);
@@ -87,7 +94,8 @@ export const ContextProvider = ({ children }) => {
         getAuthorizedUser,
         loggedInUser,
         services,
-        token
+        token,
+        isLoading
       }}
     >
       {children}

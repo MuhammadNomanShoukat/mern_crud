@@ -11,6 +11,7 @@ const Contact = () => {
     message: "",
   });
 
+  const apiUri = import.meta.env.VITE_APP_URI_API
   const { loggedInUser } = useAuth();
 
   if (loggedInUser && userData) {
@@ -54,7 +55,7 @@ const Contact = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/form/contact",
+        `${apiUri}/api/form/contact`,
         requestOptions,
       );
       if (response.status === 200 && response.ok) {

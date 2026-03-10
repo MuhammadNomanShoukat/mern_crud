@@ -12,6 +12,7 @@ const Register = () => {
     phone: "",
   });
 
+  const apiUri = import.meta.env.VITE_APP_URI_API
   const navigate = useNavigate();
   const { storeTokenInLs } = useAuth();
 
@@ -47,7 +48,7 @@ const Register = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/register",
+        `${apiUri}/api/auth/register`,
         requestOptions,
       );
       const data = await response.json();

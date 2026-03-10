@@ -9,8 +9,9 @@ const AdminUsers = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(users);
-  
-  const navigate = useNavigate()
+
+  const apiUri = import.meta.env.VITE_APP_URI_API
+  const navigate = useNavigate();
   const { token } = useAuth();
 
   const getUsers = async () => {
@@ -23,13 +24,36 @@ const AdminUsers = () => {
     };
 
     const response = await fetch(
-      "http://localhost:5000/api/admin/users",
+      `${apiUri}/api/admin/users`,
       requestOptions,
     );
 
     const users = await response.json();
 
     setUsers(users);
+  };
+
+  const deleteUser = async (id) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", token);
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+    };
+
+    const response = await fetch(
+      `${apiUri}/api/admin/user/${id}`,
+      requestOptions,
+    );
+
+    const user = await response.json();
+
+    if (response.ok && response.status === 200) {
+      setUsers(filteredUsers.filter((user) => user._id !== id));
+    }else{
+      alert("User not deleted yet")
+    }
   };
 
   useEffect(() => {
@@ -47,9 +71,9 @@ const AdminUsers = () => {
     setFilteredUsers(filtered);
   }, [searchTerm, users]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (user) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
-      setUsers(users.filter((user) => user._id !== id));
+      deleteUser(user._id);
     }
   };
 
@@ -138,7 +162,7 @@ const AdminUsers = () => {
                         <button
                           className="btn-edit"
                           title="Edit user"
-                          onClick={()=>handleEdit(user)}
+                          onClick={() => handleEdit(user)}
                         >
                           <FaEdit /> Edit
                         </button>
@@ -147,7 +171,7 @@ const AdminUsers = () => {
                         </Link> */}
                         <button
                           className="btn-delete"
-                          onClick={() => handleDelete(user._id)}
+                          onClick={() => handleDelete(user)}
                           title="Delete user"
                         >
                           <FaTrash /> Delete

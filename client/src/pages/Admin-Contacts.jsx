@@ -33,6 +33,29 @@ const AdminContacts = () => {
     setContacts(contacts);
   };
 
+  const deleteContact = async (contact) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", token);
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+    };
+
+    const response = await fetch(
+      `http://localhost:5000/api/admin/contact/${contact._id}`,
+      requestOptions,
+    );
+
+    const deletedContact = await response.json();
+
+    if (response.ok && response.status === 200) {
+      setContacts(filteredContacts.filter((item) => item._id !== contact._id));
+    }else{
+      alert("contact not deleted yet")
+    }
+  };
+
   useEffect(()=>{
     getContacts()
   }, [])
@@ -57,9 +80,10 @@ const AdminContacts = () => {
     setFilteredContacts(filtered);
   }, [searchTerm, statusFilter, contacts]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (contact) => {
     if (window.confirm("Are you sure you want to delete this contact?")) {
-      setContacts(contacts.filter((contact) => contact._id !== id));
+      deleteContact(contact)
+      
     }
   };
 
@@ -208,7 +232,7 @@ const AdminContacts = () => {
                         </button>
                         <button
                           className="btn-delete-contact"
-                          onClick={() => handleDelete(contact.id)}
+                          onClick={() => handleDelete(contact)}
                           title="Delete message"
                         >
                           <FaTrash />

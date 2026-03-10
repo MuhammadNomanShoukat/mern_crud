@@ -10,6 +10,7 @@ const Login = () => {
     password: "",
   });
 
+  const apiUri = import.meta.env.VITE_APP_URI_API
   const navigate = useNavigate();
   const { storeTokenInLs } = useAuth();
 
@@ -44,7 +45,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/login",
+        `${apiUri}/api/auth/login`,
         requestOptions,
       );
       const data = await response.json();
